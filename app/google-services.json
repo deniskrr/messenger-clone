@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "837366100117",
+    "firebase_url": "https://messenger-2732f.firebaseio.com",
+    "project_id": "messenger-2732f",
+    "storage_bucket": "messenger-2732f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837366100117:android:786a83c649abc1ee",
+        "android_client_info": {
+          "package_name": "com.deepster.messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "837366100117-fnqibn3v98np8j8c6v9fgm5v8gf2mffo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFnI-sKQxoiRnZDiqcm0kT8g7D_GRSjsQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
