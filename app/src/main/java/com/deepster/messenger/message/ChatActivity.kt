@@ -90,21 +90,31 @@ class ChatActivity : AppCompatActivity() {
     private fun sendMessage() {
         val message = chat_edittext.text.toString()
 
-        val fromID = FirebaseAuth.getInstance().uid!!
+        val fromID = FirebaseAuth.getInstance().uid
         val toID = toUser.uid
 
-        val fromReference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromID/$toID").push()
+        if (fromID == null) {
+            return
+        }
 
+        val fromReference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromID/$toID").push()
         val chatMessage = ChatMessage(fromReference.key!!, message, fromID, toID, System.currentTimeMillis())
+
         fromReference.setValue(chatMessage).addOnSuccessListener {
             Log.d(TAG, "Saved our chat message: ${fromReference.key}")
+            chat_edittext.text.clear()
         }
 
-        val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$toID/$fromID")
+        val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$toID/$fromID").push()
 
-        toReference.setValue(chatMessage).addOnSuccessListener {
-            Log.d(TAG, "Saved our chat message: ${fromReference.key}")
-        }
+        toReference.setValue(chatMessage)
+
+        val latestMessageFromReference = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromID/$toID")
+        latestMessageFromReference.setValue(chatMessage)
+
+        val latestMessageToReference = FirebaseDatabase.getInstance().getReference("/latest-messages/$toID/$fromID")
+        latestMessageToReference.setValue(chatMessage)
+
     }
 }
 
