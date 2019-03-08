@@ -16,6 +16,7 @@ import com.deepster.messenger.model.ChatMessage
 import com.deepster.messenger.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
@@ -96,6 +97,26 @@ class LatestMessagesActivity : AppCompatActivity() {
         }
 
         override fun bind(viewHolder: ViewHolder, position: Int) {
+            val userId = if (chatMessage.fromID == currentUser!!.uid) {
+                chatMessage.toID
+            } else {
+                chatMessage.fromID
+            }
+
+            val userRef = FirebaseDatabase.getInstance().getReference("/users/$userId")
+            Log.d(TAG ,userRef.path.toString())
+
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    val user = p0.getValue(User::class.java) ?: return
+                    Picasso.get().load(user.profileImageURL).into(viewHolder.itemView.profile_imageview_latest_messages)
+                    viewHolder.itemView.username_textview_latest_message.text = user.username
+                }
+            })
 
             viewHolder.itemView.mesage_textview_latest_messages.text = chatMessage.text
         }
