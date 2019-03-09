@@ -42,14 +42,37 @@ class LatestMessagesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_latest_messages)
 
         recyclerview_latest_messages.layoutManager = LinearLayoutManager(baseContext)
+        adapter.setOnItemClickListener { latestMessage, view ->
+            val chatMessage = (latestMessage as LatestMessage).chatMessage
+            val userId = if (chatMessage.fromID == currentUser!!.uid) {
+                chatMessage.toID
+            } else {
+                chatMessage.fromID
+            }
+
+            val userRef = FirebaseDatabase.getInstance().getReference("/users/$userId")
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    val user = p0.getValue(User::class.java)
+                    val intent = Intent(baseContext, ChatActivity::class.java)
+                    intent.putExtra(NewMessageActivity.USER_KEY, user)
+                    startActivity(intent)
+                }
+            })
+
+
+
+        }
         recyclerview_latest_messages.adapter = adapter
 
         auth = FirebaseAuth.getInstance()
 
         verifyUserIsLoggedIn()
-
         fetchCurrentUser()
-
         listenForLatestMessages()
 
     }
