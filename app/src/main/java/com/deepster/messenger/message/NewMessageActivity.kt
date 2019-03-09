@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.deepster.messenger.R
 import com.deepster.messenger.model.User
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -50,21 +51,16 @@ class NewMessageActivity : AppCompatActivity() {
                 snapshot.children.forEach {
                     Log.d(TAG, "User: $it")
                     val user = it.getValue(User::class.java)
-                    if (user != null) {
+                    if (user != null && user.uid != FirebaseAuth.getInstance().uid) {
                         adapter.add(UserItem(user))
                     }
                 }
-
                 adapter.setOnItemClickListener { user, view ->
-
                     val userItem = user as UserItem
-
                     val intent = Intent(baseContext, ChatActivity::class.java)
                     intent.putExtra(USER_KEY, userItem.user)
                     startActivity(intent)
-
                     finish()
-
                 }
 
                 recyclerview_newmessage.adapter = adapter
